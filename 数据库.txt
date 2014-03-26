@@ -1,0 +1,1 @@
+show databases; //查看现有的数据库
