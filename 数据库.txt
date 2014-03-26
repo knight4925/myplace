@@ -1,1 +1,4 @@
 show databases; //查看现有的数据库
+use XXX;  //选择数据库
+show tables;  //查看数据库中的表
+desc liuhuimin; //查看表结构
