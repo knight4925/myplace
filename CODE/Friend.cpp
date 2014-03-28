@@ -4,6 +4,8 @@ using namespace std;
 
 class boy;
 
+//当一个类的成员函数作为另一个类的友元函数时，必须先定义成员函数所在的类。另外，在主函数中一定要创建一个类girl的对象。只有这样，才能通过对象名调用友元函数。
+
 class girl{
 	char *name;
 	int age;
@@ -22,13 +24,15 @@ public:
 class boy{
 	char *name;
 	int age;
+	friend girl;                     //声明友元类，下面的友元函数可不声明
+
 public:
 	boy(char* n,int a){
 		name=new char[strlen(n)+1];
 		strcpy(name,n);
 		age=a;
 	}
-	friend void girl::prt(boy &);    //声明友元函数
+//	friend void girl::prt(boy &);    //声明友元函数
 	~boy(){
 		delete name;
 	}
