@@ -1,5 +1,14 @@
 show databases; //查看现有的数据库
+
 use XXX;  //选择数据库
+
 show tables;  //查看数据库中的表
+
 desc liuhuimin; //查看表结构
+
 show index from liuhuimin;//查看表索引
+
+CREATE TABLE 新表 SELECT * FROM 旧表  //复制表结构及数据到新表
+
+CREATE TABLE 新表 SELECT * FROM 旧表 WHERE 1=2  //只复制表结构到新表
+或CREATE TABLE 新表 LIKE 旧表
