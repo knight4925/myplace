@@ -12,3 +12,5 @@ CREATE TABLE 新表 SELECT * FROM 旧表  //复制表结构及数据到新表
 
 CREATE TABLE 新表 SELECT * FROM 旧表 WHERE 1=2  //只复制表结构到新表
 或CREATE TABLE 新表 LIKE 旧表
+
+alter table old_table_name rename to new_table_name //修改数据库表名
