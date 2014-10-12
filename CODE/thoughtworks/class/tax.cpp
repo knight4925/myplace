@@ -1,16 +1,3 @@
-
-
-// 一般物品上税为10 %
-// 书，食物和药品不用上税。
-// 进口的一般物品，上税15%
-// 进口的食物，上税为5%
-// 买完东西，账单上有物品和花费，包括税。总的花费 和 总的税
-// 小数点后两位，最后一位是 0 或 大于等于 5 的数
-
-// CD: 16.49=14.99*(10% + 1)
-
-//每行限定了输出的字符个数
-
 #include<iostream>
 #include<string>
 #include<sstream>
@@ -20,20 +7,35 @@
 #include<iomanip>
 using namespace std;
 
+
 class Sales_List{
 	map<string, double> rate_index;
-	Sales_List();
+	vector<string> input;
+	vector<string> output;
+	vector<string> money;
+	vector<string> object;
+	vector<double> rate;
+	double final_money;
+	double final_rate;
+	
 public:
-	read_input();
-	print_output();
-	calculate_rate();
-	calculate_money();
-
-
+	Sales_List();
+   	void read_input();
+	void print_output();
+	void calculate_rate();
+	void calculate_money();
 };
 
-void read_input(vector<string> & input){      //读入购物单
-	
+
+Sales_List::Sales_List()
+{
+	rate_index.insert(make_pair(string("book"), 0.0));
+	rate_index.insert(make_pair(string("food"), 0.0));
+	rate_index.insert(make_pair(string("medical"), 0.0));
+	rate_index.insert(make_pair(string("other"), 0.1));
+}
+
+void Sales_List :: read_input(){      //读入购物单
 	string str;
 // 	while (1)
 // 	{
@@ -52,7 +54,7 @@ void read_input(vector<string> & input){      //读入购物单
 	}
 }
 
-void print_output(vector<string> object,vector<string> & output,vector<string> money,double final_money, double final_rate){  //输出价格单
+void Sales_List :: print_output(){  //输出价格单
 
 	size_t i;
 	for(i=0;i<object.size();i++){
@@ -66,18 +68,10 @@ void print_output(vector<string> object,vector<string> & output,vector<string> m
 	cout<<"Total:"<<setiosflags(ios::fixed)<<setprecision(2)<<final_money<<endl;
 }
 
-Sales_List::Sales_List()
-{
 
-}
 
-void calculate_rate(vector<string> & input,vector<double> & rate,vector<string> & object){
+void Sales_List::calculate_rate(){   //计算每条税率
 
-	map<string, double> rate_index;
-	rate_index.insert(make_pair(string("book"), 0.0));
-	rate_index.insert(make_pair(string("food"), 0.0));
-	rate_index.insert(make_pair(string("medical"), 0.0));
-	rate_index.insert(make_pair(string("other"), 0.1));
 	size_t i;
 	for(i=0;i<input.size();i++){
 		
@@ -105,6 +99,7 @@ void calculate_rate(vector<string> & input,vector<double> & rate,vector<string> 
 		rate.push_back(rate_index["other"]);
 	}
 
+
 	for(i=0;i<input.size();i++){
 		int pos = input[i].find("imported");
 		if (pos < input[i].size()){
@@ -125,7 +120,7 @@ double rounding(double number)
 	return number;
 }
 
-void calculate_money(vector<string> & input,vector<double> & rate,vector<string> &money,double & final_rate,double & final_money){
+void Sales_List::calculate_money(){     //计算价格
 	size_t i;
 	double money_temp;
 	double money_initial=0.0;
@@ -167,23 +162,12 @@ int main()
 {
 	// 输入的第一个空格前为数量，第一个空格后为是否进口
 	// at 后的空格后为价格
-	vector<string> input;		
-	read_input(input);
 
-	vector<double> rate;
-	vector<string> object;	
-	calculate_rate(input,rate,object);
-
-
-	vector<string> money;
-	double final_rate;
-	double final_money;
-	calculate_money(input,rate,money,final_rate,final_money);
-
-
-	vector<string> output;
-	print_output(object,output,money,final_money,final_rate);
-
+	Sales_List My_list;
+	My_list.read_input();
+	My_list.calculate_rate();
+	My_list.calculate_money();
+	My_list.print_output();
 
 	return 0;
 }
