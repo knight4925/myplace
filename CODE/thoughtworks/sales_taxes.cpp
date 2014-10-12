@@ -13,9 +13,11 @@
 
 #include<iostream>
 #include<string>
+#include<sstream>
 #include<vector>
 #include<map>
 #include<fstream>
+#include<iomanip>
 using namespace std;
 
 
@@ -39,17 +41,18 @@ void read_input(vector<string> & input){      //读入购物单
 	}
 }
 
-void print_output(vector<string> object,vector<string> & output){  //输出价格单
+void print_output(vector<string> object,vector<string> & output,vector<string> money,double final_money, double final_rate){  //输出价格单
 
 	size_t i;
 	for(i=0;i<object.size();i++){
-		output.push_back(object[i]+":");
+		output.push_back(object[i]+":"+money[i]);
 	}
 
-	cout<<"-------------------------"<<endl;
 	for(i=0;i<output.size();i++){
 		cout<<output[i]<<endl;
 	}
+	cout<<"Sales Taxes:"<<setiosflags(ios::fixed)<<setprecision(2)<<final_rate<<endl;
+	cout<<"Total:"<<setiosflags(ios::fixed)<<setprecision(2)<<final_money<<endl;
 }
 
 void calculate_rate(vector<string> & input,vector<double> & rate,vector<string> & object){
@@ -112,37 +115,48 @@ double rounding(double number)
 	return number;
 }
 
-void calculate_money(vector<string> & input,vector<double> & rate,vector<string> &money){
+void calculate_money(vector<string> & input,vector<double> & rate,vector<string> &money,double & final_rate,double & final_money){
 	size_t i;
 	double money_temp;
+	double money_initial=0.0;
+	string money_str;
 	int pos;
 	int at;
 	int number_pos;
 	int number;
+	final_money =0.0;
+
 	for(i=0;i<input.size();i++){
 			
 		at = input[i].find(" at");
 
 		money_temp = atof(input[i].substr(at+4,input[i].size()-at-4).c_str());
-		cout<<money_temp<<"--->";
+//		cout<<money_temp<<"--->";
+
+		money_initial += money_temp;
 
 		money_temp += money_temp*rate[i];
-		cout<<money_temp<<"--->";
-		//money_temp=(int)(money_temp*100)/100.0;
+//		cout<<money_temp<<"--->";
 		money_temp=rounding(money_temp);
-		cout<<money_temp<<endl;
+//		cout<<money_temp<<endl;
 
 		number_pos = input[i].find(" ");
 		int number = atoi(input[i].substr(0,number_pos).c_str());
 
 		money_temp=number*money_temp;
 
+		stringstream ss;
+		ss<<money_temp;
+		ss>>money_str;
+		money.push_back(money_str);	
+		final_money += money_temp;
+	}
 
-//		money.push_back();	
-		
-//		cout<<money[i]<<endl;
+	money_initial = (int)(money_initial*100)/100.0;
+	final_money = (int)(final_money*100)/100.0;
+	final_rate = final_money-money_initial;
 
-	}		
+//	cout<<final_rate<<"  "<<final_money<<endl;
 }
 
 
@@ -154,17 +168,19 @@ int main()
 	read_input(input);
 
 	vector<double> rate;
-	vector<string> object;
+	vector<string> object;	
 	calculate_rate(input,rate,object);
 
 
 	vector<string> money;
-	calculate_money(input,rate,money);
+	double final_rate;
+	double final_money;
+	calculate_money(input,rate,money,final_rate,final_money);
 
 
 	vector<string> output;
 
-	print_output(object,output);
+	print_output(object,output,money,final_money,final_rate);
 
 
 	return 0;
